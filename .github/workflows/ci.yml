@@ -1,4 +1,4 @@
-name: Python CI
+name: Python CI/CD
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
     branches: ["main"]
 
 jobs:
+
   test:
     runs-on: ubuntu-latest
 
@@ -37,3 +38,22 @@ jobs:
         with:
           name: factorial-python
           path: dist/
+
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: factorial-python
+          path: deploy/
+
+      - name: Deploy application
+        run: |
+          echo "Starting deployment..."
+          echo "Application files:"
+          ls -la deploy/
+          echo "Deployment simulation completed!"
